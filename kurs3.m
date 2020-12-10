@@ -77,7 +77,7 @@ function cost = costfun(x0,t0,u)
         x = applycontrol(t,x,u(i));
         t = t + dt;
     end
-    cost = cost + termcost(t, x);
+    cost = cost + termcost(t0, x);
 end
 
 % стоимость этапа
