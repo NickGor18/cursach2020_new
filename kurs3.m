@@ -4,12 +4,13 @@ clc, clear all, close all
 
 Nmpc = 20;
 t0 = 0;
-T = 90;
-N  = 90;
+T = 10;
+N  = 10;
 dt = T/N;
 Th = t0:dt:T;
 km = ones(1,Nmpc);
-% параметры системы
+um = ones(1,Nmpc);
+% РїР°СЂР°РјРµС‚СЂС‹ СЃРёСЃС‚РµРјС‹
 k0    = 1;
 eps   = 0.01;
 rho   = 0.05;
@@ -19,12 +20,15 @@ k_1 =(alpha/(rho+mu))^(1/(1-alpha));
 u_1 = (mu * k_1)/(k_1^alpha);
 lambda = 1/((k_1^alpha)*(1-u_1));
 for l = 1:Nmpc
-    km(l)=u_1;
+    km(l)=k_1;
+end
+for l = 1:Nmpc
+    um(l)=u_1;
 end
 
 figure; hold on; grid on;
 
-% вызов МРС
+% РІС‹Р·РѕРІ РњР РЎ
 [k, c] = mpcsolve(Nmpc, k0, t0, 0.3*ones(N,1));
 disp(k);
 disp(c);
@@ -34,17 +38,18 @@ for itau = 1:Nmpc
      plot((itau-1)*dt+Th,k(:,itau), '--k', 'LineWidth',1);
 end
 plot((0:Nmpc)*dt,k(1,:), '-r', 'LineWidth',1);
-plot((0:Nmpc-1)*dt,km, '--m', 'LineWidth',1);
-plot((0:Nmpc-1)*dt,c(1,:), '-g', 'LineWidth',1);
+plot((1:Nmpc)*dt,km, '--m', 'LineWidth',1);
+plot((1:Nmpc)*dt,um, '--m', 'LineWidth',1);
+plot((1:Nmpc)*dt,c(1,:), '-g', 'LineWidth',1);
 
 
-% вычисление следующего состояния
+% РІС‹С‡РёСЃР»РµРЅРёРµ СЃР»РµРґСѓСЋС‰РµРіРѕ СЃРѕСЃС‚РѕСЏРЅРёСЏ
 function x = applycontrol(t,k,c)
     [~, x] = ode45(@(t,k) deq(k,c),[t, t+dt], k);
     x = x(end,:);
 end
 
-% алгоритм mpc
+% Р°Р»РіРѕСЂРёС‚Рј mpc
 function [x, u] = mpcsolve(Nmpc, x0, t0, u0)
     t = t0;
     x = zeros(N + 1,Nmpc);
@@ -61,7 +66,8 @@ function [x, u] = mpcsolve(Nmpc, x0, t0, u0)
     end
 end
 
-% критерий качества
+
+% РєСЂРёС‚РµСЂРёР№ РєР°С‡РµСЃС‚РІР°
 function cost = costfun(x0,t0,u) 
     cost = 0; 
     x = x0; 
@@ -74,17 +80,17 @@ function cost = costfun(x0,t0,u)
     cost = cost + termcost(t, x);
 end
 
-% стоимость этапа
+% СЃС‚РѕРёРјРѕСЃС‚СЊ СЌС‚Р°РїР°
 function r = stagecost(t, k, c)
     r = (log(1 - c) + log(k^alpha))*...
-        (exp(-rho * (t+dt))-exp(-rho * t))/rho;  
+        (exp(-rho * (t+dt))-exp(-rho * t))/rho;
 end
 
-% терминальная стоимость
+% С‚РµСЂРјРёРЅР°Р»СЊРЅР°СЏ СЃС‚РѕРёРјРѕСЃС‚СЊ
 function z = termcost(t, k)
     z = (exp(-rho * (t+T)))*lambda*k;
 end
-% система
+% СЃРёСЃС‚РµРјР°
 function dk = deq(k,c)
     dk = c*k^(alpha) - mu*k;
 end
