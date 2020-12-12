@@ -1,0 +1,109 @@
+\documentclass[notheorems]{beamer}
+\usepackage[cp1251]{inputenc}
+\usepackage{SlideStyle}
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+\usepackage{setspace}
+\usepackage{grffile}
+\usepackage{bigints}
+\graphicspath{}
+
+\titlegraphic{\vspace*{-7cm}
+    \parbox[c]{3cm}{\includegraphics[height=.7cm]{bsulogo}}
+    \hspace*{1cm}%
+    \parbox[c]{2cm}{\includegraphics[height=1.5cm]{FPMIlogo}}
+    \hspace*{1cm}%
+    \parbox[c]{3cm}{\includegraphics[height=.7cm]{MOUlogo}}
+    \vspace*{3cm}
+}
+
+\title[Методы MPC]{\Large Применение методов МРС \\ в экономических задачах}
+
+
+\author[Н.С. Горошко]{Николай С. Горошко}
+
+\institute[ФПМИ, БГУ]{}
+
+
+\date[\copyright 2020-2021]{}%{\scriptsize \structure{2017-2018}}
+
+
+\begin{document}
+
+\maketitle
+
+%--------------------------------------------------------------------------------------
+\begin{frame}{Содержание}
+
+\begin{itemize}
+
+\item Теория управления по прогнозирующей модели \vfill
+
+\item Неоклассическая задача оптимального экономического роста  \vfill
+
+\item Построение магистралей  \vfill
+
+\item Результаты численного эксперимента   \vfill
+
+\end{itemize}
+
+\end{frame}
+
+%--------------------------------------------------------------------------
+\begin{frame}{Цели}
+
+Применить идеи MPC для решения неоклассической задачи
+экономического роста с выходом на магистраль.
+
+\end{frame}
+\begin{frame}{Теория управления \\ по прогнозирующей модели}
+
+Управление по прогнозирующей модели (далее MPC, от англ. Model Predictive Control) --- это продвинутый метод управления процессами, который используется для соответствующего набора ограничений.
+
+\end{frame}
+
+%--------------------------------------------------------------------------
+\begin{frame}{Неоклассическая задача \\ оптимального экономического роста}
+
+Начальные условия
+$$ J(K,L,u)= \int_{0}^{\infty}
+e^{-\rho t}[\ln(1-u(t))+\ln F(K(t),L(t))]dt \rightarrow \max $$
+$$ \dot{K}(t)=u(t)F(K(t),L(t)),\hspace{1cm} u(t)\in U_\varepsilon = [0 ,1-\varepsilon],  $$
+$$\dot{L}(t)=\mu L(t),$$
+$$ K(0) = K_0,L (0) = L_0, $$
+Условия к которым перешли в результате преобразований
+$$ J(x,u) = \int_{0}^{\infty} e^{-\rho t}[\ln(1-u(t))+\ln f(x(t))]dt \rightarrow \max.$$
+$$ \dot{x}(t) = u(t) f(x(t))-\mu x(t),u (t)\in U_\varepsilon = [0 ,1-\varepsilon], $$
+$$x(0) = x_0$$
+\end{frame}
+
+%--------------------------------------------------------------------------
+\begin{frame}{Построение магистралей}
+
+Полученные в результате преобразований формулы
+$$ \dfrac{d}{dx}f(x) = \rho + \mu $$
+$$ \hat{p} = \dfrac{1}{f(\hat{x}) - \mu\hat{x}} $$
+$$ \hat{u} = \dfrac{\mu \hat{x}}{f(\hat{x})} $$
+
+\end{frame}
+\begin{frame}{Результаты численного эксперимента 1}
+
+\begin{figure}
+	\includegraphics[scale=0.5]{figure1.1}
+	\includegraphics[scale=0.4]{figure1.2}
+	\caption{Траектории $ x $ и $ u $ при $ z  = 10 $}
+\end{figure}
+
+
+\end{frame}
+\begin{frame}{Результаты численного эксперимента 2}
+
+\begin{figure}
+	\includegraphics[scale=0.5]{figure5.1}
+	\includegraphics[scale=0.4]{figure5.2}
+	\caption{Траектории $ x $ и $ u $ при $ z  = 10 $}
+\end{figure}
+
+
+\end{frame}
+\end{document} 
